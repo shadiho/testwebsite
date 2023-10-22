@@ -233,10 +233,15 @@ function showPopup() {
         */
        alert(UUID);
         var vImage = document.getElementById("vImage");
-
+        alert(vImage);
         vImage.setAttribute("data-uuid", uuidParam);
+                alert("Set Attribute 1");
         var imgUrl = "https://play.vidyard.com/" + UUID + ".jpg";
+                    alert("imgUrl" + imgUrl);
+
         vImage.setAttribute("src", imgUrl);
+                    alert("Set Attribute 2");
+
         alert("DONE");
         if (localStorage.getItem(UUID+"_questions")){
           questions =JSON.parse(localStorage.getItem(UUID+"_questions"));
