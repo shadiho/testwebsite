@@ -232,7 +232,6 @@ function showPopup() {
         var imgUrl = "https://play.vidyard.com/" + UUID + ".jpg";
         vImage.setAttribute("src", imgUrl);
 
-        alert("DONE");
         if (localStorage.getItem(UUID+"_questions")){
           questions =JSON.parse(localStorage.getItem(UUID+"_questions"));
           console.log("get the questions from localstorage");
@@ -251,7 +250,6 @@ function showPopup() {
         
         window.onVidyardAPI = (vidyardEmbed) => {
           vidyardEmbed.api.addReadyListener((_, player) => {
-            alert("vvvv")
                console.log('player ready:', player.ready());
               console.log(player.uuid);
               players = VidyardV4.api.getPlayersByUUID(UUID);
