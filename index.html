@@ -2,8 +2,191 @@
 <head>
     <!-- The script tag should live in the head of your page if at all possible -->
 <script type="text/javascript" async src="https://play.vidyard.com/embed/v4.js"></script>
-<link rel="stylesheet" type="text/css" href="styles.css">
-<script src="script.js"></script>
+
+
+<style>
+  .popup-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .popup .message {
+    margin-bottom: 10px;
+  }
+  
+  .popup .button-container {
+    text-align: center;
+  }
+  
+  .popup button {
+    margin: 5px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .popup button:hover {
+    background-color: #0056b3;
+  }
+  
+
+  /* Style the select dropdown */
+  select {
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+    color: #333;
+    width: 200px;
+    outline: none; /* Remove default blue outline on focus */
+    cursor: pointer;
+}
+
+/* Style the options */
+option {
+    padding: 8px;
+}
+
+/* On hover, change background color of options */
+option:hover {
+    background-color: #f0f0f0;
+}
+
+ /* Basic button style */
+ .nice-button {
+  display: inline-block;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff; /* Blue color, you can change this */
+  color: #fff; /* White text color */
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+}
+
+/* Button hover effect */
+.nice-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Button active effect */
+.nice-button:active {
+  background-color: #004080; /* Even darker blue when clicked */
+}
+
+.progress-bar {
+  /width: 300px;/
+  height: 10px;
+  background-color: #f0f0f0;
+  border-radius: 1px;
+  overflow: hidden;
+  margin: 0px auto;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: #007bff;
+  border-radius: 10px;
+  transition: width 0.3s ease-in-out;
+}
+
+#progressSlider {
+  width: 1px;
+  margin: 20px auto;
+}
+
+#progressValue {
+  font-size: 20px;
+}
+</style>
+
+<script>
+  
+  alert("Hiiiiiiiiiiiiiii")
+  
+function showPopup() {
+    document.getElementById("popupContainer").style.display = "block";
+  }
+  
+  function hidePopup() {
+    document.getElementById("popupContainer").style.display = "none";
+  }
+  
+  function onOptionSelected(option) {
+    hidePopup();
+    if (option === true) {
+        questions[currentQuestion][1] = true;
+        localStorage.setItem(UUID + "_questions",JSON.stringify(questions));
+        if (currentQuestion < questions.length-1){
+            currentQuestion+=1;
+            console.log("Current Question ** " + currentQuestion);
+            localStorage.setItem(UUID+"_currentQuestion",currentQuestion);
+        }
+            
+        players[0].play();
+    } else {
+        if (currentQuestion===0){
+            players[0].seek(0);
+        }else{
+            players[0].seek(questions[currentQuestion-1][0]);
+        }
+        
+    }
+    intervalId = setInterval(myTimer, 300);
+    console.log("set interval!!!!!");
+  }
+
+  function getURLParameters() {
+  const search = window.location.search.substring(1); // Get the query string without the leading '?'
+  const params = {};
+
+  // Split the query string into individual parameter key-value pairs
+  const keyValues = search.split('&');
+
+  keyValues.forEach(keyValue => {
+    const [key, value] = keyValue.split('=');
+    params[key] = decodeURIComponent(value); // Decode URI-encoded values
+  });
+
+  return params;
+}
+  
+
+  function updateProgress(currentTime) {
+    var val = Math.trunc((currentTime * 100)/ players[0].metadata.length_in_seconds) ;
+    /const slider = document.getElementById('progressSlider');/
+    const progressValue = document.getElementById('progressValue');
+    const progressFill = document.getElementById('progressFill');
+
+    const value = val;
+    const percent = value + '%';
+    progressValue.textContent = percent;
+    progressFill.style.width = percent;
+}
+</script>
 
 </head>
 
@@ -36,17 +219,18 @@
 
 
 <script async type="text/javascript">
-        const UUID = "NDn4BPMrSm2KNsRzpTbpMT";
-        const initialQuestionsArr = [[2,false,"Question 1"],[6,false,"Question 2"],[8,false,"Question 3"],[25,false,"Question Three"]];
+       
         var players;
         var questions;
         var currentQuestion;
-        
-        questions = JSON.parse(JSON.stringify(initialQuestionsArr));
+        var parameter=getURLParameters();
+        const UUID = parameter['v'];
+        questions = [[2,false,"Question 1"],[6,false,"Question 2"],[8,false,"Question 3"]];
         /*localStorage.setItem(UUID + "_questions",JSON.stringify(questions));
         localStorage.setItem(UUID + '_currentTime',0);
         localStorage.setItem(UUID + "_currentQuestion",0);
         */
+       alert(UUID)
 
         if (localStorage.getItem(UUID+"_questions")){
           questions =JSON.parse(localStorage.getItem(UUID+"_questions"));
@@ -66,7 +250,8 @@
         
         window.onVidyardAPI = (vidyardEmbed) => {
           vidyardEmbed.api.addReadyListener((_, player) => {
-              console.log('player ready:', player.ready());
+            alert("vvvv")
+               console.log('player ready:', player.ready());
               console.log(player.uuid);
               players = VidyardV4.api.getPlayersByUUID(UUID);
               
@@ -91,7 +276,6 @@
                 console.log('Viewer paused the video');
                 isPlaying = false;
               });
-
               if (localStorage.getItem(UUID + '_currentTime')){
                 players[0].seek(localStorage.getItem(UUID + '_currentTime'));
               }
@@ -131,9 +315,7 @@
           if (result === true) {
             players[0].seek(0);
             setTimeout(() => {
-              questions = JSON.parse(JSON.stringify(initialQuestionsArr));
-              console.log("Questions ********* " + questions);
-              console.log("initialQuestionsArr 000000000 " + initialQuestionsArr);
+              questions = [[2,false,"Question 1"],[6,false,"Question 2"],[8,false,"Question 3"]];
               currentQuestion = 0;
               localStorage.setItem(UUID + "_questions",JSON.stringify(questions));
               localStorage.setItem(UUID + '_currentTime',currentQuestion);
@@ -142,6 +324,8 @@
             }, 300);  
           }
         }
+
+
 
 </script>
 
@@ -158,4 +342,3 @@
 
 </body>
 </html>
-
