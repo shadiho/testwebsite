@@ -227,20 +227,10 @@ function showPopup() {
         var parameter=getURLParameters();
         const UUID = parameter['v'];
         questions = [[2,false,"Question 1"],[6,false,"Question 2"],[8,false,"Question 3"]];
-        /*localStorage.setItem(UUID + "_questions",JSON.stringify(questions));
-        localStorage.setItem(UUID + '_currentTime',0);
-        localStorage.setItem(UUID + "_currentQuestion",0);
-        */
-       alert(UUID);
         var vImage = document.getElementById("vImage");
-        alert(vImage);
         vImage.setAttribute("data-uuid", UUID);
-                alert("Set Attribute 1");
         var imgUrl = "https://play.vidyard.com/" + UUID + ".jpg";
-                    alert("imgUrl" + imgUrl);
-
         vImage.setAttribute("src", imgUrl);
-                    alert("Set Attribute 2");
 
         alert("DONE");
         if (localStorage.getItem(UUID+"_questions")){
