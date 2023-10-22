@@ -209,6 +209,7 @@ function showPopup() {
 
 <!-- Put this wherever you would like your player to appear -->
 <img
+  id="vImage"
   style="width: 100%; margin: auto; display: block;"
   class="vidyard-player-embed"
   src="https://play.vidyard.com/NDn4BPMrSm2KNsRzpTbpMT.jpg"
@@ -230,8 +231,13 @@ function showPopup() {
         localStorage.setItem(UUID + '_currentTime',0);
         localStorage.setItem(UUID + "_currentQuestion",0);
         */
-       alert(UUID)
+       alert(UUID);
+        var vImage = document.getElementById("vImage");
 
+        vImage.setAttribute("data-uuid", uuidParam);
+        var imgUrl = "https://play.vidyard.com/" + UUID + ".jpg";
+        vImage.setAttribute("src", imgUrl);
+        alert("DONE");
         if (localStorage.getItem(UUID+"_questions")){
           questions =JSON.parse(localStorage.getItem(UUID+"_questions"));
           console.log("get the questions from localstorage");
