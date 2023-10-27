@@ -125,7 +125,6 @@ option:hover {
 
 <script>
   
-  alert("Hiiiiiiiiiiiiiii")
   
 function showPopup() {
     document.getElementById("popupContainer").style.display = "block";
@@ -160,32 +159,32 @@ function showPopup() {
   }
 
   function getURLParameters() {
-  const search = window.location.search.substring(1); // Get the query string without the leading '?'
-  const params = {};
-
-  // Split the query string into individual parameter key-value pairs
-  const keyValues = search.split('&');
-
-  keyValues.forEach(keyValue => {
-    const [key, value] = keyValue.split('=');
-    params[key] = decodeURIComponent(value); // Decode URI-encoded values
-  });
-
-  return params;
-}
+      const search = window.location.search.substring(1); // Get the query string without the leading '?'
+      const params = {};
+    
+      // Split the query string into individual parameter key-value pairs
+      const keyValues = search.split('&');
+    
+      keyValues.forEach(keyValue => {
+        const [key, value] = keyValue.split('=');
+        params[key] = decodeURIComponent(value); // Decode URI-encoded values
+      });
+    
+      return params;
+ }
   
 
   function updateProgress(currentTime) {
-    var val = Math.trunc((currentTime * 100)/ players[0].metadata.length_in_seconds) ;
-    /const slider = document.getElementById('progressSlider');/
-    const progressValue = document.getElementById('progressValue');
-    const progressFill = document.getElementById('progressFill');
-
-    const value = val;
-    const percent = value + '%';
-    progressValue.textContent = percent;
-    progressFill.style.width = percent;
-}
+        var val = Math.trunc((currentTime * 100)/ players[0].metadata.length_in_seconds) ;
+        /const slider = document.getElementById('progressSlider');/
+        const progressValue = document.getElementById('progressValue');
+        const progressFill = document.getElementById('progressFill');
+    
+        const value = val;
+        const percent = value + '%';
+        progressValue.textContent = percent;
+        progressFill.style.width = percent;
+ }
 </script>
 
 </head>
