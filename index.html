@@ -1,10 +1,11 @@
 <html>
 <head>
     <!-- The script tag should live in the head of your page if at all possible -->
-    <script type="text/javascript" async src="https://play.vidyard.com/embed/v4.js"></script>
-    
-    <style>
-     .popup-container {
+<script type="text/javascript" async src="https://play.vidyard.com/embed/v4.js"></script>
+
+
+<style>
+  .popup-container {
     display: none;
     position: fixed;
     top: 0;
@@ -120,19 +121,21 @@ option:hover {
 #progressValue {
   font-size: 20px;
 }
-    </style>
+</style>
 
-    <script>
-      function showPopup() {
-          document.getElementById("popupContainer").style.display = "block";
-      }
-      
-      function hidePopup() {
-        
-      }
-      
-      function onOptionSelected(option) {
-         hidePopup();
+<script>
+  
+  
+function showPopup() {
+    document.getElementById("popupContainer").style.display = "block";
+  }
+  
+  function hidePopup() {
+    document.getElementById("popupContainer").style.display = "none";
+  }
+  
+  function onOptionSelected(option) {
+    hidePopup();
     if (option === true) {
         questions[currentQuestion][1] = true;
         localStorage.setItem(UUID + "_questions",JSON.stringify(questions));
@@ -153,89 +156,187 @@ option:hover {
     }
     intervalId = setInterval(myTimer, 300);
     console.log("set interval!!!!!");
-      }
+  }
 
-      // Function to populate questions and answers
-      function populateQuestions() {
-        var questions = [
-          {
-            question: "What is the capital of France?",
-            answers: ["London", "Berlin", "Paris", "Madrid"],
-            correctAnswer: 2, // Index of the correct answer (0-based)
-          },
-          // Add more questions here
-        ];
+  function getURLParameters() {
+      const search = window.location.search.substring(1); // Get the query string without the leading '?'
+      const params = {};
+    
+      // Split the query string into individual parameter key-value pairs
+      const keyValues = search.split('&');
+    
+      keyValues.forEach(keyValue => {
+        const [key, value] = keyValue.split('=');
+        params[key] = decodeURIComponent(value); // Decode URI-encoded values
+      });
+    
+      return params;
+ }
+  
 
-        // Get a random question (you can change this logic)
-        var randomQuestion = questions[Math.floor(Math.random() * questions.length)];
+  function updateProgress(currentTime) {
+        var val = Math.trunc((currentTime * 100)/ players[0].metadata.length_in_seconds) ;
+        /const slider = document.getElementById('progressSlider');/
+        const progressValue = document.getElementById('progressValue');
+        const progressFill = document.getElementById('progressFill');
+    
+        const value = val;
+        const percent = value + '%';
+        progressValue.textContent = percent;
+        progressFill.style.width = percent;
+ }
+</script>
 
-        // Display the question and answer choices
-        document.getElementById("questionText").textContent = randomQuestion.question;
-
-        for (var i = 0; i < randomQuestion.answers.length; i++) {
-          var answerButton = document.createElement("button");
-          answerButton.textContent = randomQuestion.answers[i];
-          answerButton.addEventListener("click", function () {
-            onOptionSelected(this.textContent === randomQuestion.answers[randomQuestion.correctAnswer]);
-          });
-          document.getElementById("answerContainer").appendChild(answerButton);
-        }
-      }
-    </script>
 </head>
 
 <body>
+
   <h1>Choose your favorite Language:</h1>
   <select id="langDropdown" onchange="onColorChange()">
-    <option value="0">Germany</option>
-    <option value="1">English</option>
+      <option value="0">Germany</option>
+      <option value="1">English</option>
   </select>
 
   <button class="nice-button" onclick="resetLesson()">Reset Lesson</button>
-  <br />
-  <br />
+<br />
+<br/>
   <div class="progress-bar">
     <div class="progress-bar-fill" id="progressFill"></div>
-  </div>
+  </div>  
+  <!--<input type="range" id="progressSlider" min="0" max="100" step="1" value="0" onchange="updateProgress()">-->
   <div id="progressValue">0%</div>
 
-  <div id="questionContainer">
-    <p id="questionText"></p>
-    <div id="answerContainer"></div>
-  </div>
+<!-- Put this wherever you would like your player to appear -->
+<img
+  id="vImage"
+  style="width: 100%; margin: auto; display: block;"
+  class="vidyard-player-embed"
+  <!-- src="https://play.vidyard.com/NDn4BPMrSm2KNsRzpTbpMT.jpg"-->
+  <!-- data-uuid="NDn4BPMrSm2KNsRzpTbpMT"-->
+  data-v="4"
+  data-type="inline"
+/>
 
-  <!-- Put this wherever you would like your player to appear -->
-  <img
-    id="vImage"
-    style="width: 100%; margin: auto; display: block;"
-    class="vidyard-player-embed"
-    data-v="4"
-    data-type="inline"
-  />
 
-  <script async type="text/javascript">
-    var players;
-    var currentQuestion;
-    var parameter = getURLParameters();
-    const UUID = parameter['v'];
+<script async type="text/javascript">
+       
+        var players;
+        var questions;
+        var currentQuestion;
+        var parameter=getURLParameters();
+        const UUID = parameter['v'];
+        questions = [[2,false,"Question 1"],[6,false,"Question 2"],[8,false,"Question 3"]];
+        var vImage = document.getElementById("vImage");
+        vImage.setAttribute("data-uuid", UUID);
+        var imgUrl = "https://play.vidyard.com/" + UUID + ".jpg";
+        vImage.setAttribute("src", imgUrl);
 
-    if (localStorage.getItem(UUID + "_questions")) {
-      // If questions are already stored in local storage, you can retrieve them here.
-      // Otherwise, initialize your questions.
-    }
+        if (localStorage.getItem(UUID+"_questions")){
+          questions =JSON.parse(localStorage.getItem(UUID+"_questions"));
+          console.log("get the questions from localstorage");
+        }else{
+          questions = [[2,false,"Question 1"],[6,false,"Question 2"],[8,false,"Question 3"]];
+          console.log("reset the questions");
+        }
+        console.log(questions);
+        console.log(localStorage.getItem(UUID + '_currentTime'));
+        
+        
 
-    populateQuestions(); // Display the initial question
+        console.log(currentQuestion);
+        var intervalId;
+        var isPlaying = false;
+        
+        window.onVidyardAPI = (vidyardEmbed) => {
+          vidyardEmbed.api.addReadyListener((_, player) => {
+               console.log('player ready:', player.ready());
+              console.log(player.uuid);
+              players = VidyardV4.api.getPlayersByUUID(UUID);
+              
+              players[0].on('play', function (eventTime) {
+                  console.log('The video started playing from second' + eventTime);
+                  playIt();
+              });
+              var currentTime = localStorage.getItem(UUID + '_currentTime');
+              if (currentTime)
+                updateProgress(currentTime);
+              else 
+                updateProgress(0);
+              if (localStorage.getItem(UUID+"_currentQuestion")){
+                currentQuestion = Number(localStorage.getItem(UUID+"_currentQuestion"));
+                
+              }else{
+                currentQuestion = 0;
+              }
+              
+              intervalId = setInterval(myTimer,300);
+              players[0].on('pause', function () {
+                console.log('Viewer paused the video');
+                isPlaying = false;
+              });
+              if (localStorage.getItem(UUID + '_currentTime')){
+                players[0].seek(localStorage.getItem(UUID + '_currentTime'));
+              }
+          }, UUID);
 
-    // ... (your existing JavaScript code) ...
-  </script>
 
-  <div id="popupContainer" class="popup-container">
+        }
+        function playIt(){
+          isPlaying = true;
+        } 
+
+        async function myTimer(){
+            if (isPlaying === true)
+              players[0].resume();
+            console.log('Video time at second ..' +players[0].currentTime());
+            localStorage.setItem(UUID+'_currentTime', players[0].currentTime());
+            updateProgress(players[0].currentTime());
+            console.log(questions);
+            console.log(currentQuestion);
+            if (players[0].currentTime() >= questions[currentQuestion][0] && questions[currentQuestion][1]===false ){
+                console.log("intervalId = " + intervalId);
+                players[0].pause();
+                document.getElementById("questionMessage").textContent = questions[currentQuestion][2];
+                showPopup();
+                clearInterval(intervalId);
+            }
+        }
+
+        function onColorChange() {
+            const dropdown = document.getElementById('langDropdown');
+            const selectedLang = dropdown.value;
+            players[0].setAudioTrack(selectedLang);
+        }
+
+        function resetLesson(){
+          const result = confirm("Do you want to proceed?");
+          if (result === true) {
+            players[0].seek(0);
+            setTimeout(() => {
+              questions = [[2,false,"Question 1"],[6,false,"Question 2"],[8,false,"Question 3"]];
+              currentQuestion = 0;
+              localStorage.setItem(UUID + "_questions",JSON.stringify(questions));
+              localStorage.setItem(UUID + '_currentTime',currentQuestion);
+              localStorage.setItem(UUID + " _currentQuestion",0);
+             
+            }, 300);  
+          }
+        }
+
+
+
+</script>
+
+<div id="popupContainer" class="popup-container">
     <div class="popup">
       <div class="message" id="questionMessage"></div>
       <div class="button-container">
-        <!-- Options will be dynamically added in the JavaScript code -->
+        <button onclick="onOptionSelected(true)">TRUE</button>
+        <!-- <button onclick="onOptionSelected(false)">FALSE</button> -->
       </div>
     </div>
   </div>
+
+
 </body>
 </html>
