@@ -133,6 +133,33 @@ function showPopup() {
   function hidePopup() {
     document.getElementById("popupContainer").style.display = "none";
   }
+
+          // Function to populate questions and answers
+      function populateQuestions() {
+        var questions = [
+          {
+            question: "What is the capital of France?",
+            answers: ["London", "Berlin", "Paris", "Madrid"],
+            correctAnswer: 2, // Index of the correct answer (0-based)
+          },
+          // Add more questions here
+        ];
+
+        // Get a random question (you can change this logic)
+        var randomQuestion = questions[Math.floor(Math.random() * questions.length)];
+
+        // Display the question and answer choices
+        document.getElementById("questionText").textContent = randomQuestion.question;
+
+        for (var i = 0; i < randomQuestion.answers.length; i++) {
+          var answerButton = document.createElement("button");
+          answerButton.textContent = randomQuestion.answers[i];
+          answerButton.addEventListener("click", function () {
+            onOptionSelected(this.textContent === randomQuestion.answers[randomQuestion.correctAnswer]);
+          });
+          document.getElementById("answerContainer").appendChild(answerButton);
+        }
+      }
   
   function onOptionSelected(option) {
     hidePopup();
@@ -281,6 +308,7 @@ function showPopup() {
 
 
         }
+    
         function playIt(){
           isPlaying = true;
         } 
@@ -323,7 +351,7 @@ function showPopup() {
           }
         }
 
-
+populateQuestions();
 
 </script>
 
