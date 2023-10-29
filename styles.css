@@ -24,9 +24,19 @@
     margin-bottom: 10px;
   }
   
-  .popup .button-container {
+/*   .popup .button-container {
     text-align: center;
-  }
+  } */
+
+.button-container {
+  display: flex;
+  flex-direction: column; /* Display items vertically */
+}
+
+.button-container label {
+  display: block; /* Display each label as a block element */
+  margin-bottom: 10px; /* Add space between answer choices */
+}
   
   .popup button {
     margin: 5px;
