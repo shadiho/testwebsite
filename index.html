@@ -371,10 +371,18 @@ function showPopup() {
     <div class="popup">
       <div class="message" id="questionMessage">What is the capital of France?</div>
       <div class="button-container">
-       <button onclick="onOptionSelected('Paris')">Paris</button>
-      <button onclick="onOptionSelected('London')">London</button>
-      <button onclick="onOptionSelected('Berlin')">Berlin</button>
-      <button onclick="onOptionSelected('Madrid')">Madrid</button>
+        <label>
+        <input type="radio" name="answer" value="Paris"> Paris
+      </label>
+      <label>
+        <input type="radio" name="answer" value="London"> London
+      </label>
+      <label>
+        <input type="radio" name="answer" value="Berlin"> Berlin
+      </label>
+      <label>
+        <input type="radio" name="answer" value="Madrid"> Madrid
+      </label>
       </div>
     </div>
   </div>
