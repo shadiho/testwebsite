@@ -369,10 +369,12 @@ function showPopup() {
 
 <div id="popupContainer" class="popup-container">
     <div class="popup">
-      <div class="message" id="questionMessage"></div>
+      <div class="message" id="questionMessage">What is the capital of France?</div>
       <div class="button-container">
-        <button onclick="onOptionSelected(true)">TRUE</button>
-        <!-- <button onclick="onOptionSelected(false)">FALSE</button> -->
+       <button onclick="onOptionSelected('Paris')">Paris</button>
+      <button onclick="onOptionSelected('London')">London</button>
+      <button onclick="onOptionSelected('Berlin')">Berlin</button>
+      <button onclick="onOptionSelected('Madrid')">Madrid</button>
       </div>
     </div>
   </div>
