@@ -134,7 +134,33 @@ option:hover {
 </style>
 
 <script>
-  
+
+    // Function to set the question and answer choices
+function setQuestionAndAnswers(question, answers) {
+  // Set the question
+  document.getElementById("questionMessage").textContent = question;
+
+  // Populate the answer choices
+  var answerContainer = document.getElementById("pop");
+  answerContainer.innerHTML = ""; // Clear previous choices
+
+  answers.forEach(function (answer) {
+    var label = document.getElementById("pop").createElement("label");
+    var radio = document.getElementById("pop").createElement("input");
+    radio.type = "radio";
+    radio.name = "answer";
+    radio.value = answer;
+    label.appendChild(radio);
+    label.appendChild(document.createTextNode(answer));
+    answerContainer.appendChild(label);
+  });
+}
+
+// Example usage:
+var question = "What is the capital of Syriaaaaaaaaaaaaaaa?";
+var answers = ["Paris", "London", "Berlin", "Madrid"];
+setQuestionAndAnswers(question, answers);
+
   
 function showPopup() {
     document.getElementById("popupContainer").style.display = "block";
@@ -378,7 +404,7 @@ function showPopup() {
 </script>
 
 <div id="popupContainer" class="popup-container">
-    <div class="popup">
+    <div class="popup" id= "pop">
       <div class="message" id="questionMessage">What is the capital of France?</div>
       <div class="button-container">
         <label>
